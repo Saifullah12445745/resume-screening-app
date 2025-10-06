@@ -1,0 +1,6 @@
+streamlit
+pandas
+sentence-transformers
+docx2txt
+pdfminer.six
+nltk
