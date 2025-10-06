@@ -15,9 +15,7 @@ Extract skills from each resume
 Rank resumes based on similarity with the JD
 
 Download results as a CSV file
-## Screenshots
 
-![App Screenshot](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
 
 
 ## Run Locally
@@ -47,21 +45,9 @@ Start the server
 ```
 
 
-## Roadmap
-
-- Additional browser support
-
-- Add more integrations
 
 
-## Related
 
-Here are some related projects
-
-[Awesome README](https://github.com/matiassingers/awesome-readme)
-
-
-![Logo](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/th5xamgrr6se0x5ro4g6.png)
 
 
 ## Key Features
