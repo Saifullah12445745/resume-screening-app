@@ -1,5 +1,6 @@
 """Resume Studio API. Uploaded documents stay in memory."""
 import hashlib
+import json
 import logging
 import os
 from functools import lru_cache
@@ -61,8 +62,8 @@ def screen(
             name = (upload.filename or 'resume').replace('\\', '/').rsplit('/', 1)[-1][:200]
             data = upload.file.read(MAX_BYTES + 1)
             total += len(data)
-            if total > 50 * 1024 * 1024:
-                raise HTTPException(413, 'Total uploaded content exceeds 50 MB. Use a smaller batch.')
+            if total > (4 if os.getenv("VERCEL") else 50) * 1024 * 1024:
+                raise HTTPException(413, 'Total uploaded content exceeds the hosting limit. Use a smaller batch.')
             if len(data) > MAX_BYTES:
                 issues.append({'file': name, 'message': 'File exceeds 10 MB.'})
                 continue
@@ -97,8 +98,11 @@ def screen(
                 issues.append({'file': None, 'message': 'Semantic comparison is unavailable. Results show skill coverage only. Install optional semantic dependencies and allow the first model download.'})
         key = 'semantic' if semantic_ready else 'coverage'
         rows.sort(key=lambda r: r[key] if r[key] is not None else -101, reverse=True)
-        return {'candidates': rows, 'issues': issues, 'required': required,
+        result = {'candidates': rows, 'issues': issues, 'required': required,
                 'method': 'semantic' if semantic_ready else 'skills'}
+        if os.getenv('VERCEL') and len(json.dumps(result).encode('utf-8')) > 4 * 1024 * 1024:
+            raise HTTPException(413, 'Extracted results exceed the hosting limit. Compare fewer resumes at a time.')
+        return result
     finally:
         for upload in files:
             upload.file.close()

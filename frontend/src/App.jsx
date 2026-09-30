@@ -1,5 +1,5 @@
 import React, {useRef, useState} from 'react';
-import {downloadCSV, validateFiles} from './utils.js';
+import {downloadCSV, validateFiles, MAX_BATCH_MB} from './utils.js';
 
 const API = (import.meta.env.VITE_API_URL || '').replace(/\/$/,'');
 const skillOptions = ['python','javascript','typescript','react','node.js','fastapi','django','flask','sql','postgresql','mongodb','docker','git','aws','azure','machine learning','deep learning','nlp','java','c++','c#','html','css','excel','power bi','tableau','kubernetes','linux'];
@@ -61,7 +61,7 @@ export default function App(){
     </section>
     <section className="panel upload-panel"><div className="panel-heading"><span className="step-number teal">02</span><div><h3>Add your candidates</h3><p>Bring the resumes. We’ll organise the evidence.</p></div></div>
      <input ref={uploadRef} type="file" multiple accept=".pdf,.docx,.txt" hidden onChange={e=>{addFiles(e.target.files);e.target.value='';}}/>
-     <button disabled={busy} className={'dropzone '+(drag?'dragging':'')} onClick={()=>uploadRef.current.click()} onDragOver={e=>{e.preventDefault();setDrag(true);}} onDragLeave={()=>setDrag(false)} onDrop={e=>{e.preventDefault();setDrag(false);if(!busy)addFiles(e.dataTransfer.files);}}><span className="upload-icon"><Icon name="upload" size={28}/></span><strong>Drop your resumes here</strong><span>or <b>browse files</b> from your device</span><small>PDF, DOCX, TXT · 10 MB each · 50 MB per batch</small></button>
+     <button disabled={busy} className={'dropzone '+(drag?'dragging':'')} onClick={()=>uploadRef.current.click()} onDragOver={e=>{e.preventDefault();setDrag(true);}} onDragLeave={()=>setDrag(false)} onDrop={e=>{e.preventDefault();setDrag(false);if(!busy)addFiles(e.dataTransfer.files);}}><span className="upload-icon"><Icon name="upload" size={28}/></span><strong>Drop your resumes here</strong><span>or <b>browse files</b> from your device</span><small>PDF, DOCX, TXT · {Math.min(10, MAX_BATCH_MB)} MB each · {MAX_BATCH_MB} MB per batch</small></button>
      <div className="upload-meta"><span>{files.length} documents added</span><span>Up to 50 resumes</span></div>
      {files.length>0&&<ul className="file-list">{files.map((f,i)=><li key={f.name+i}><span className="file-icon"><Icon name="doc" size={17}/></span><div><strong>{f.name}</strong><small>{(f.size/1024).toFixed(1)} KB</small></div><button disabled={busy} className="icon-button" aria-label={'Remove '+f.name} onClick={()=>{setFiles(prev=>prev.filter((_,n)=>n!==i));setDirty(true);}}><Icon name="close" size={16}/></button></li>)}</ul>}
      <div className="mode-picker"><label htmlFor="method">Comparison method</label><select disabled={busy} id="method" value={method} onChange={e=>{setMethod(e.target.value);setDirty(true);}}><option value="skills">Required skill coverage</option><option value="semantic">Skills + semantic similarity</option></select><p>{method==='skills'?'Checks selected terms and known aliases. No AI model download needed.':'Adds text similarity. Optional backend dependencies and a first-time model download are required.'}</p></div>

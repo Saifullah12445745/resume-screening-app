@@ -1,9 +1,10 @@
-export const MAX_FILE_SIZE = 10 * 1024 * 1024;
+export const MAX_BATCH_MB = import.meta.env?.VITE_VERCEL === "1" ? 4 : 50;
+export const MAX_FILE_SIZE = Math.min(10, MAX_BATCH_MB) * 1024 * 1024;
 export function validateFiles(files) {
   if(files.length > 50) return 'Upload at most 50 resumes.';
   if(files.some(f => !/\.(pdf|docx|txt)$/i.test(f.name))) return 'Use PDF, DOCX or TXT files.';
-  if(files.some(f => f.size === 0 || f.size > MAX_FILE_SIZE)) return 'Files must be nonempty and no larger than 10 MB.';
-  if(files.reduce((sum,f)=>sum+f.size,0)>50*1024*1024) return 'Use a batch smaller than 50 MB.';
+  if(files.some(f => f.size === 0 || f.size > MAX_FILE_SIZE)) return `Files must be nonempty and no larger than ${Math.min(10, MAX_BATCH_MB)} MB.`;
+  if(files.reduce((sum,f)=>sum+f.size,0)>MAX_BATCH_MB*1024*1024) return `Use a batch smaller than ${MAX_BATCH_MB} MB.`;
   return '';
 }
 export function toCSV(rows, shortlist) {

@@ -119,3 +119,7 @@ docker run --rm -p 8000:8000 resume-studio
 ```
 
 Then open http://localhost:8000. Production uses `web:app`; local two-terminal development continues to use `main:app` and Vite.
+
+## Vercel deployment
+
+Import this repository with its root directory set to the repository root. vercel.json builds frontend/ and routes /api requests to api/index.py. Base Python dependencies support skills-only screening; semantic mode keeps its explicit fallback. Vercel builds set a 4 MB total upload limit in the UI, and the backend checks request/result content size. Local and Docker runs retain the larger limits. Hosting deployment must still be verified after connecting an account.
