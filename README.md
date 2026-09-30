@@ -104,3 +104,18 @@ This version supports human review. It has no authentication, persistent applica
 ## Verified for this release
 
 Production frontend build, frontend utility checks, and all 12 backend/core tests passed. Browser verification covered real upload requests, skill detection, candidate ranking, evidence dialog, shortlist, CSV download, table view, theme switch, and a 390px mobile viewport with no horizontal overflow or browser errors. Optional model download/inference remains untested. Preview candidates are synthetic test resumes.
+
+## Single-service deployment
+
+The included Dockerfile builds React and serves it alongside FastAPI on one origin. `render.yaml` configures a Render web service with the free plan and `/api/health` health check. Import this repository as a Render Blueprint to create it. A hosting account and successful deployment are required before a live URL exists.
+
+The default container enables skills-only screening; optional semantic dependencies are not installed. Selecting semantic mode displays the existing fallback message. To enable embeddings later, use a suitable compute plan and install requirements-semantic.txt in the container.
+
+Local container commands:
+
+```bash
+docker build -t resume-studio .
+docker run --rm -p 8000:8000 resume-studio
+```
+
+Then open http://localhost:8000. Production uses `web:app`; local two-terminal development continues to use `main:app` and Vite.
