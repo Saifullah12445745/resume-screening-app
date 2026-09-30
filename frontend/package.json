@@ -1,0 +1,6 @@
+{
+  "name": "resume-studio", "private": true, "version": "2.0.0", "type": "module",
+  "scripts": {"dev": "vite --host 127.0.0.1", "build": "vite build", "preview": "vite preview", "test": "node --test src/utils.test.js"},
+  "dependencies": {"react": "^19.0.0", "react-dom": "^19.0.0"},
+  "devDependencies": {"vite": "^6.0.0"}
+}
