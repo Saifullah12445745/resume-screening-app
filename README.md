@@ -1,8 +1,61 @@
 # Resume Studio 2.0
 
-A React + FastAPI replacement for the original Streamlit resume-screening application. Streamlit has been removed completely. This source project runs locally; no hosting provider is required or selected.
+A resume screening workspace with a standalone Streamlit interface for Community Cloud and a React + FastAPI interface. Both use the shared skill-matching engine.
 
-![Resume Studio dashboard](previews/desktop.webp)
+## Streamlit quick start
+
+The Streamlit interface includes a midnight/violet dashboard, sample workspace, PDF/DOCX/TXT uploads, required-skill detection, custom skills, candidate ranking, extracted-text review, session shortlist and CSV export.
+
+It runs independently: no Node.js build, FastAPI server, external AI service or API key is required. This interface scores **required-skill coverage only**; it does not compute semantic similarity.
+
+### Deploy on Streamlit Community Cloud
+
+Sign in at https://share.streamlit.io and create an app with:
+
+| Setting | Value |
+| --- | --- |
+| Repository | `Saifullah12445745/resume-screening-app` |
+| Branch | `main` |
+| Main file path | `streamlit_app/app.py` |
+| Python version (Advanced settings) | `3.12` |
+
+Community Cloud finds `streamlit_app/requirements.txt` beside the entrypoint before checking root dependencies. No secrets are required. After deployment succeeds, copy the app URL into your portfolio's Live Demo link.
+
+### Preview locally
+
+Run these commands from the repository root:
+
+```bash
+python -m venv .venv
+```
+
+Windows PowerShell:
+
+```powershell
+.\.venv\Scripts\python.exe -m pip install -r streamlit_app/requirements.txt
+.\.venv\Scripts\python.exe -m streamlit run streamlit_app/app.py
+```
+
+macOS / Linux:
+
+```bash
+.venv/bin/python -m pip install -r streamlit_app/requirements.txt
+.venv/bin/python -m streamlit run streamlit_app/app.py
+```
+
+Open http://localhost:8501. Click **Try sample workspace**, then **Screen resumes** to try synthetic candidates.
+
+### Streamlit limits and verification
+
+The Streamlit app accepts 20 files, 10 MB each and 25 MB combined. It uses literal skill matching and known aliases, so human review is necessary; a mentioned skill does not establish proficiency. Scanned PDFs need OCR.
+
+Uploads are processed on the server without application-level disk or database persistence. Results and shortlist are session-only. Clear workspace removes the app's session data. This public demo has no account system or persistent applicant database.
+
+The new Streamlit interface has been source-reviewed but has not been executed or browser-tested in this editing environment. Verify sample screening, real document uploads, shortlist and CSV after deployment. The verification notes below apply to the existing React/FastAPI edition.
+
+## React + FastAPI edition
+
+![React dashboard preview](previews/desktop.webp)
 
 ## Included
 
@@ -101,7 +154,7 @@ Documents and results are not saved to a database. The backend reads uploads in 
 
 This version supports human review. It has no authentication, persistent applicant database, automatic rejection workflow or public-production access controls. Optional semantic model loading is not exercised by the base automated tests. Authentication and hosting-level request limits should be considered when preparing a public deployment.
 
-## Verified for this release
+## Previous React/FastAPI verification
 
 Production frontend build, frontend utility checks, and all 12 backend/core tests passed. Browser verification covered real upload requests, skill detection, candidate ranking, evidence dialog, shortlist, CSV download, table view, theme switch, and a 390px mobile viewport with no horizontal overflow or browser errors. Optional model download/inference remains untested. Preview candidates are synthetic test resumes.
 
